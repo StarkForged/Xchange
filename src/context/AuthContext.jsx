@@ -23,7 +23,6 @@ export const DUMMY_USERS = [
     email: "admin@example.com",
     password: "admin123",
     role: "admin",
-    trustScore: 100,
   },
 ];
 
