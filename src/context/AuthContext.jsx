@@ -2,6 +2,9 @@ import { createContext, useContext } from "react";
 
 export const AuthContext = createContext(null);
 
+// Authentication helpers and dummy user store for the sample app.
+// This module provides validation, login lookups, and registration logic.
+
 // Dummy users for testing - stored as username:password combinations
 export const DUMMY_USERS = [
   {

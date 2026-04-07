@@ -3,6 +3,7 @@ import { COLORS } from "../../constants/colors";
 import { Icon } from "./Icon";
 import { TrustBadge } from "./TrustBadge";
 
+// ProductCard displays a marketplace listing preview with hover effects.
 export function ProductCard({ ad, onClick }) {
   const [hovered, setHovered] = useState(false);
   return (

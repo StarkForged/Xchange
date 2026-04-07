@@ -5,6 +5,7 @@ import { InputField } from "../form/InputField";
 import { SelectField } from "../form/SelectField";
 import { PrimaryButton } from "../form/PrimaryButton";
 
+// Registration page collects user details and creates a new account.
 export function RegisterPage() {
   const { register, setCurrentPage, authError } = useAuth();
   const [form, setForm] = useState({

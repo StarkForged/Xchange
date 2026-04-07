@@ -2,6 +2,7 @@ import { useState } from "react";
 import { COLORS } from "../../constants/colors";
 import { Icon } from "../common/Icon";
 
+// InputField is a reusable text input component with optional icon support.
 export function InputField({
   label,
   type = "text",

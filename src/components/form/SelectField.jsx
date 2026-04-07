@@ -1,5 +1,6 @@
 import { COLORS } from "../../constants/colors";
 
+// SelectField is a reusable select dropdown for form choices.
 export function SelectField({ label, value, onChange, options }) {
   return (
     <div style={{ marginBottom: "16px" }}>

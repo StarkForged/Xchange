@@ -7,6 +7,7 @@ import { EmptyState } from "../common/EmptyState";
 import { PrimaryButton } from "../form/PrimaryButton";
 import { Icon } from "../common/Icon";
 
+// Seller dashboard shows key metrics and quick actions for sellers.
 export function SellerDashboard() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");

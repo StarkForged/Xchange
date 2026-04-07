@@ -1,6 +1,7 @@
 import { COLORS } from "../../constants/colors";
 import { Icon } from "../common/Icon";
 
+// SideNav renders the dashboard navigation links for admin/seller views.
 export function SideNav({ items, active, onSelect }) {
   return (
     <aside

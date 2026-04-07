@@ -4,6 +4,7 @@ import { COLORS } from "../../constants/colors";
 import { Icon } from "../common/Icon";
 import { EmptyState } from "../common/EmptyState";
 
+// Search page displays filters and listing search UI.
 export function SearchPage() {
   const { setCurrentPage } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");

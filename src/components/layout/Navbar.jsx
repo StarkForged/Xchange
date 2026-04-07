@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { COLORS } from "../../constants/colors";
 import { Icon } from "../common/Icon";
 
+// Navbar displays app navigation and auth actions based on current user.
 export function Navbar() {
   const { user, logout, setCurrentPage } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);

@@ -7,6 +7,7 @@ import { SelectField } from "../form/SelectField";
 import { PrimaryButton } from "../form/PrimaryButton";
 import { Icon } from "../common/Icon";
 
+// PostAdPage allows authenticated users to create a new marketplace listing.
 export function PostAdPage() {
   const { user, setCurrentPage } = useAuth();
   const [form, setForm] = useState({

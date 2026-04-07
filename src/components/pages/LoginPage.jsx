@@ -4,6 +4,7 @@ import { COLORS } from "../../constants/colors";
 import { InputField } from "../form/InputField";
 import { PrimaryButton } from "../form/PrimaryButton";
 
+// Login page collects credentials and submits them through auth context.
 export function LoginPage() {
   const { login, setCurrentPage, authError } = useAuth();
   const [email, setEmail] = useState("");

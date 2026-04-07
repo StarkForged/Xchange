@@ -1,5 +1,6 @@
 import { COLORS } from "../../constants/colors";
 
+// Footer contains static site links and branding for the marketplace.
 export function Footer() {
   return (
     <footer

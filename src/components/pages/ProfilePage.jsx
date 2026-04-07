@@ -5,6 +5,7 @@ import { StatCard } from "../common/StatCard";
 import { EmptyState } from "../common/EmptyState";
 import { Icon } from "../common/Icon";
 
+// Profile page displays the current user's account info and trust score.
 export function ProfilePage() {
   const { user, setCurrentPage } = useAuth();
   if (!user) return null;

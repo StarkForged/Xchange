@@ -7,6 +7,7 @@ import { InputField } from "../form/InputField";
 import { PrimaryButton } from "../form/PrimaryButton";
 import { Icon } from "../common/Icon";
 
+// AdDetailPage shows a selected listing's full details and contact actions.
 export function AdDetailPage() {
   const { selectedAd, user, setCurrentPage } = useAuth();
   const [inquiryText, setInquiryText] = useState("");

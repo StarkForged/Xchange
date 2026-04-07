@@ -1,5 +1,6 @@
 import { COLORS } from "../../constants/colors";
 
+// PrimaryButton is a reusable styled button for main CTA actions.
 export function PrimaryButton({ children, onClick, style: s = {}, disabled }) {
   return (
     <button

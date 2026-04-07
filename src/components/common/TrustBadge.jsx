@@ -1,6 +1,7 @@
 import { COLORS } from "../../constants/colors";
 import { Icon } from "./Icon";
 
+// TrustBadge visualizes the user's trust score in the UI.
 export function TrustBadge({ score }) {
   const color =
     score >= 90

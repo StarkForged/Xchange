@@ -3,6 +3,7 @@ import { COLORS } from "../../constants/colors";
 import { EmptyState } from "../common/EmptyState";
 import { Icon } from "../common/Icon";
 
+// Messages page shows the user's conversation list and chat input.
 export function MessagesPage() {
   const { user } = useAuth();
 

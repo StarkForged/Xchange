@@ -3,6 +3,7 @@ import { COLORS } from "../../constants/colors";
 import { Icon } from "../common/Icon";
 import { EmptyState } from "../common/EmptyState";
 
+// Home page is the public landing page with search and category browsing.
 export function HomePage() {
   const { setCurrentPage } = useAuth();
 

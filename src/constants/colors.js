@@ -1,3 +1,4 @@
+// Design tokens used throughout the app for consistent styling.
 export const COLORS = {
   primary: "#0053cc",
   primaryDim: "#0048b3",

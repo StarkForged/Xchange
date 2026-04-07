@@ -6,6 +6,7 @@ import { EmptyState } from "../common/EmptyState";
 import { PrimaryButton } from "../form/PrimaryButton";
 import { Icon } from "../common/Icon";
 
+// Admin dashboard provides top-level platform overview and moderation controls.
 export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
 

@@ -1,3 +1,4 @@
+// Icon wrapper for Material Symbols with optional filled styling.
 export function Icon({ name, filled, size, className = "", style = {} }) {
   return (
     <span

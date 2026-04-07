@@ -1,6 +1,7 @@
 import { COLORS } from "../../constants/colors";
 import { Icon } from "./Icon";
 
+// EmptyState shows a simple placeholder message for empty views.
 export function EmptyState({ icon, title, subtitle }) {
   return (
     <div

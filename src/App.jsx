@@ -1,4 +1,4 @@
-﻿import { useState, useCallback } from "react";
+﻿import { useState, useCallback, useEffect } from "react";
 import { AuthContext, useAuth, authenticateUser, registerUser, isValidEmail, isValidPassword } from "./context/AuthContext";
 import { COLORS } from "./constants/colors";
 import { Navbar } from "./components/layout/Navbar";
@@ -14,42 +14,97 @@ import { SellerDashboard } from "./components/pages/SellerDashboard";
 import { AdminDashboard } from "./components/pages/AdminDashboard";
 import { MessagesPage } from "./components/pages/MessagesPage";
 
+// App root manages page routing, authentication state, and localStorage persistence.
 export default function App() {
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState("home");
   const [selectedAd, setSelectedAd] = useState(null);
   const [authError, setAuthError] = useState("");
 
+  // Choose a default landing page based on user role.
+  const getDefaultPageForRole = (userData) => {
+    if (!userData) return "home";
+    return userData.role === "admin"
+      ? "admin-dashboard"
+      : userData.role === "seller"
+      ? "seller-dashboard"
+      : "home";
+  };
+
+  // Save or clear auth state in localStorage.
+  const persistAuth = (userData, page) => {
+    if (typeof window === "undefined") return;
+    if (!userData) {
+      localStorage.removeItem("xchange-auth");
+      return;
+    }
+    localStorage.setItem(
+      "xchange-auth",
+      JSON.stringify({ user: userData, currentPage: page })
+    );
+  };
+
+  // Restore saved auth and page when the app loads.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const saved = localStorage.getItem("xchange-auth");
+    if (!saved) return;
+
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed?.user) {
+        const defaultPage = getDefaultPageForRole(parsed.user);
+        const restoredPage =
+          parsed.currentPage && !["login", "register"].includes(parsed.currentPage)
+            ? parsed.currentPage
+            : defaultPage;
+        setUser(parsed.user);
+        setCurrentPage(restoredPage);
+      }
+    } catch (error) {
+      console.warn("Failed to restore auth state:", error);
+      localStorage.removeItem("xchange-auth");
+    }
+  }, []);
+
+  // Handle login submission, validate credentials, and persist auth state.
   const login = useCallback(({ email, password }) => {
     setAuthError("");
-    
-    // Validate inputs
-    if (!email || !password) {
+
+    const normalizedEmail = email?.trim().toLowerCase();
+    const normalizedPassword = password?.trim();
+
+    if (!normalizedEmail || !normalizedPassword) {
       setAuthError("Email and password are required");
       return;
     }
 
-    if (!isValidEmail(email)) {
+    if (!isValidEmail(normalizedEmail)) {
       setAuthError("Invalid email format");
       return;
     }
 
-    // Authenticate against dummy users
-    const authenticatedUser = authenticateUser(email, password);
+    // Authenticate against dummy user list.
+    const authenticatedUser = authenticateUser(normalizedEmail, normalizedPassword);
     if (authenticatedUser) {
       setUser(authenticatedUser);
-      // Route based on role
-      const nextPage = authenticatedUser.role === "admin" 
-        ? "admin-dashboard" 
-        : authenticatedUser.role === "seller" 
-        ? "seller-dashboard" 
+      const nextPage = authenticatedUser.role === "admin"
+        ? "admin-dashboard"
+        : authenticatedUser.role === "seller"
+        ? "seller-dashboard"
         : "home";
       setCurrentPage(nextPage);
+      persistAuth(authenticatedUser, nextPage);
     } else {
+      setUser(null);
       setAuthError("Invalid email or password");
+      setCurrentPage("login");
+      persistAuth(null);
     }
   }, []);
 
+  // Handle user registration and persist the new session.
   const register = useCallback((form) => {
     setAuthError("");
 
@@ -65,13 +120,16 @@ export default function App() {
       setUser(result.user);
       const nextPage = result.user.role === "seller" ? "seller-dashboard" : "home";
       setCurrentPage(nextPage);
+      persistAuth(result.user, nextPage);
     }
   }, []);
 
+  // Remove auth state from memory and localStorage.
   const logout = useCallback(() => {
     setUser(null);
     setCurrentPage("home");
     setAuthError("");
+    persistAuth(null);
   }, []);
 
   const ctxValue = {
@@ -87,7 +145,22 @@ export default function App() {
     setAuthError,
   };
 
+  const protectedPages = new Set([
+    "profile",
+    "post-ad",
+    "seller-dashboard",
+    "seller-listings",
+    "admin-dashboard",
+    "admin-users",
+    "admin-categories",
+    "messages",
+  ]);
+
   const renderPage = () => {
+    if (!user && protectedPages.has(currentPage)) {
+      return <LoginPage />;
+    }
+
     switch (currentPage) {
       case "login":
         return <LoginPage />;

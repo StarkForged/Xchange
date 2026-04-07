@@ -1,6 +1,7 @@
 import { COLORS } from "../../constants/colors";
 import { Icon } from "./Icon";
 
+// StatCard renders a small dashboard metric card with an icon.
 export function StatCard({ icon, iconBg, iconColor, label, value, extra }) {
   return (
     <div
