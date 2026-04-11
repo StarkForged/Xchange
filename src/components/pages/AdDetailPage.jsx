@@ -9,13 +9,13 @@ import { Icon } from "../common/Icon";
 
 // AdDetailPage shows a selected listing's full details and contact actions.
 export function AdDetailPage() {
-  const { selectedAd, user, setCurrentPage } = useAuth();
+  const { selectedAd, user } = useAuth();
   const [inquiryText, setInquiryText] = useState("");
   const [sent, setSent] = useState(false);
 
   if (!selectedAd) {
     return (
-      <div style={{ paddingTop: "72px" }}>
+      <div>
         <EmptyState
           icon="info"
           title="No listing selected"
@@ -26,7 +26,7 @@ export function AdDetailPage() {
   }
 
   return (
-    <div style={{ paddingTop: "72px" }}>
+    <div>
       <div
         style={{
           maxWidth: "1200px",
@@ -53,6 +53,10 @@ export function AdDetailPage() {
                 "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop"
               }
               alt={selectedAd.title}
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop";
+              }}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </div>
@@ -162,8 +166,11 @@ export function AdDetailPage() {
                 style={{ display: "flex", alignItems: "center", gap: "12px" }}
               >
                 <img
-                  src={`https://ui-avatars.com/api/?name=${selectedAd.seller || "Seller"}&background=d4e5ee&color=44545c&size=48&bold=true`}
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(selectedAd.seller || "Seller")}&background=d4e5ee&color=44545c&size=48&bold=true`}
                   alt="Seller"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=S&background=d4e5ee&color=44545c&size=48&bold=true`;
+                  }}
                   style={{
                     width: 48,
                     height: 48,

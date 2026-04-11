@@ -1,11 +1,11 @@
-import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { COLORS } from "../../constants/colors";
 import { Icon } from "../common/Icon";
 import { EmptyState } from "../common/EmptyState";
 
 // Home page is the public landing page with search and category browsing.
 export function HomePage() {
-  const { setCurrentPage } = useAuth();
+  const navigate = useNavigate();
 
   const categories = [
     { icon: "devices", label: "Electronics" },
@@ -19,7 +19,7 @@ export function HomePage() {
   ];
 
   return (
-    <div style={{ paddingTop: "72px" }}>
+    <div>
       {/* Hero Section */}
       <section
         style={{
@@ -65,7 +65,7 @@ export function HomePage() {
             </p>
           </div>
           <button
-            onClick={() => setCurrentPage("search")}
+            onClick={() => navigate("/search")}
             style={{
               background: COLORS.surfaceContainerLow,
               border: "none",
@@ -106,7 +106,7 @@ export function HomePage() {
             <input
               type="text"
               placeholder="Search for anything..."
-              onFocus={() => setCurrentPage("search")}
+              onFocus={() => navigate("/search")}
               style={{
                 width: "100%",
                 padding: "16px 20px 16px 56px",
@@ -123,7 +123,7 @@ export function HomePage() {
             />
           </div>
           <button
-            onClick={() => setCurrentPage("search")}
+            onClick={() => navigate("/search")}
             style={{
               background: `linear-gradient(135deg, ${COLORS.primary}, ${COLORS.primaryContainer})`,
               color: COLORS.onPrimary,
@@ -141,6 +141,7 @@ export function HomePage() {
         </div>
         {/* Categories */}
         <div
+          className="category-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(8, 1fr)",
@@ -151,7 +152,7 @@ export function HomePage() {
           {categories.map((cat) => (
             <div
               key={cat.label}
-              onClick={() => setCurrentPage("search")}
+              onClick={() => navigate("/search")}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -279,7 +280,7 @@ export function HomePage() {
             </p>
             <div style={{ display: "flex", gap: "16px" }}>
               <button
-                onClick={() => setCurrentPage("post-ad")}
+                onClick={() => navigate("/post-ad")}
                 style={{
                   background: COLORS.primaryContainer,
                   color: "#000",

@@ -1,26 +1,25 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { COLORS } from "../../constants/colors";
 import { InputField } from "../form/InputField";
 import { SelectField } from "../form/SelectField";
 import { PrimaryButton } from "../form/PrimaryButton";
+import { ErrorMessage } from "../common/ErrorMessage";
+import { useRegisterForm } from "../../hooks/useRegisterForm";
 
-// Registration page collects user details and creates a new account.
+// RegisterPage — UI-only; all form state and validation lives in useRegisterForm.
 export function RegisterPage() {
-  const { register, setCurrentPage, authError } = useAuth();
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "buyer",
-  });
+  const { register, authError, setAuthError } = useAuth();
+  const { form, update, errors, handleBlur, handleSubmit } =
+    useRegisterForm(register);
 
-  const update = (field) => (e) =>
-    setForm({ ...form, [field]: e.target.value });
+  const clearServerError = () => {
+    if (authError) setAuthError("");
+  };
 
-  const handleSubmit = () => {
-    register(form);
+  const handleChange = (field) => (e) => {
+    update(field)(e);
+    clearServerError();
   };
 
   return (
@@ -60,51 +59,47 @@ export function RegisterPage() {
             Create your account to start trading.
           </p>
         </div>
-        {authError && (
-          <div
-            style={{
-              padding: "10px 16px",
-              background: "rgba(179,27,37,0.06)",
-              borderRadius: "10px",
-              color: COLORS.error,
-              fontSize: "13px",
-              marginBottom: "16px",
-              textAlign: "center",
-            }}
-          >
-            {authError}
-          </div>
-        )}
+
+        <ErrorMessage message={authError} />
+
         <InputField
           label="Full Name"
           value={form.name}
-          onChange={update("name")}
+          onChange={handleChange("name")}
+          onBlur={() => handleBlur("name")}
           placeholder="John Doe"
           icon="person"
+          error={errors.name}
         />
         <InputField
           label="Email"
           type="email"
           value={form.email}
-          onChange={update("email")}
+          onChange={handleChange("email")}
+          onBlur={() => handleBlur("email")}
           placeholder="you@example.com"
           icon="mail"
+          error={errors.email}
         />
         <InputField
           label="Password"
           type="password"
           value={form.password}
-          onChange={update("password")}
+          onChange={handleChange("password")}
+          onBlur={() => handleBlur("password")}
           placeholder="Create a strong password"
           icon="lock"
+          error={errors.password}
         />
         <InputField
           label="Confirm Password"
           type="password"
           value={form.confirmPassword}
-          onChange={update("confirmPassword")}
+          onChange={handleChange("confirmPassword")}
+          onBlur={() => handleBlur("confirmPassword")}
           placeholder="Re-enter your password"
           icon="lock"
+          error={errors.confirmPassword}
         />
         <SelectField
           label="I want to"
@@ -115,6 +110,7 @@ export function RegisterPage() {
             { value: "seller", label: "Sell items" },
           ]}
         />
+
         <PrimaryButton
           onClick={handleSubmit}
           style={{
@@ -126,6 +122,7 @@ export function RegisterPage() {
         >
           Create Account
         </PrimaryButton>
+
         <p
           style={{
             textAlign: "center",
@@ -135,17 +132,16 @@ export function RegisterPage() {
           }}
         >
           Already have an account?{" "}
-          <a
-            onClick={() => setCurrentPage("login")}
+          <Link
+            to="/login"
             style={{
               color: COLORS.primary,
               fontWeight: 600,
-              cursor: "pointer",
               textDecoration: "none",
             }}
           >
             Sign in
-          </a>
+          </Link>
         </p>
       </div>
     </div>

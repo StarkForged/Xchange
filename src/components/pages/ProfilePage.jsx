@@ -7,11 +7,11 @@ import { Icon } from "../common/Icon";
 
 // Profile page displays the current user's account info and trust score.
 export function ProfilePage() {
-  const { user, setCurrentPage } = useAuth();
+  const { user } = useAuth();
   if (!user) return null;
 
   return (
-    <div style={{ paddingTop: "72px" }}>
+    <div>
       <div
         style={{
           maxWidth: "900px",
@@ -48,8 +48,11 @@ export function ProfilePage() {
               }}
             >
               <img
-                src={`https://ui-avatars.com/api/?name=${user.name}&background=779dff&color=fff&size=80&bold=true`}
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=779dff&color=fff&size=80&bold=true`}
                 alt={user.name}
+                onError={(e) => {
+                  e.currentTarget.src = `https://ui-avatars.com/api/?name=U&background=779dff&color=fff&size=80&bold=true`;
+                }}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
               <div

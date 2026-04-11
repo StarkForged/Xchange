@@ -9,6 +9,7 @@ import { Icon } from "../common/Icon";
 // Admin dashboard provides top-level platform overview and moderation controls.
 export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [sideNavOpen, setSideNavOpen] = useState(false);
 
   const sideItems = [
     { id: "overview", icon: "dashboard", label: "Overview" },
@@ -19,9 +20,48 @@ export function AdminDashboard() {
   ];
 
   return (
-    <div style={{ paddingTop: "72px", display: "flex" }}>
-      <SideNav items={sideItems} active={activeTab} onSelect={setActiveTab} />
+    <div className="dashboard-layout" style={{ display: "flex" }}>
+      {sideNavOpen && (
+        <div
+          onClick={() => setSideNavOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            top: "72px",
+            background: "rgba(0,0,0,0.3)",
+            zIndex: 39,
+          }}
+        />
+      )}
+      <SideNav
+        items={sideItems}
+        active={activeTab}
+        onSelect={setActiveTab}
+        open={sideNavOpen}
+        onClose={() => setSideNavOpen(false)}
+      />
       <main style={{ flex: 1, padding: "32px", minHeight: "calc(100vh - 72px)" }}>
+        <button
+          className="mobile-nav-toggle"
+          onClick={() => setSideNavOpen(true)}
+          style={{
+            marginBottom: "20px",
+            display: "none",
+            alignItems: "center",
+            gap: "8px",
+            background: COLORS.surfaceContainerLow,
+            border: "none",
+            borderRadius: "10px",
+            padding: "10px 16px",
+            fontWeight: 600,
+            fontSize: "14px",
+            cursor: "pointer",
+            color: COLORS.onSurface,
+          }}
+        >
+          <Icon name="menu" size="20px" />
+          Menu
+        </button>
         {activeTab === "overview" && (
           <>
             <div style={{ marginBottom: "28px" }}>

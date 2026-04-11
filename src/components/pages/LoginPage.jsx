@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { COLORS } from "../../constants/colors";
 import { InputField } from "../form/InputField";
 import { PrimaryButton } from "../form/PrimaryButton";
+import { ErrorMessage } from "../common/ErrorMessage";
+import { useLoginForm } from "../../hooks/useLoginForm";
 
-// Login page collects credentials and submits them through auth context.
+// LoginPage — UI-only; all form state and validation lives in useLoginForm.
 export function LoginPage() {
-  const { login, setCurrentPage, authError } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login, authError, setAuthError } = useAuth();
+  const { email, setEmail, password, setPassword, errors, handleBlur, handleSubmit } =
+    useLoginForm(login);
 
-  const handleSubmit = () => {
-    login({ email, password });
+  // Clear the server-side auth error when the user starts typing again
+  const clearServerError = () => {
+    if (authError) setAuthError("");
   };
 
   return (
@@ -51,43 +54,31 @@ export function LoginPage() {
             Welcome back. Sign in to continue.
           </p>
         </div>
-        {authError && (
-          <div
-            style={{
-              padding: "10px 16px",
-              background: "rgba(179,27,37,0.06)",
-              borderRadius: "10px",
-              color: COLORS.error,
-              fontSize: "13px",
-              marginBottom: "16px",
-              textAlign: "center",
-            }}
-          >
-            {authError}
-          </div>
-        )}
+
+        <ErrorMessage message={authError} />
+
         <InputField
           label="Email"
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => { setEmail(e.target.value); clearServerError(); }}
+          onBlur={() => handleBlur("email")}
           placeholder="you@example.com"
           icon="mail"
+          error={errors.email}
         />
         <InputField
           label="Password"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => { setPassword(e.target.value); clearServerError(); }}
+          onBlur={() => handleBlur("password")}
           placeholder="Enter your password"
           icon="lock"
+          error={errors.password}
         />
-        <div
-          style={{
-            textAlign: "right",
-            marginBottom: "20px",
-          }}
-        >
+
+        <div style={{ textAlign: "right", marginBottom: "20px" }}>
           <a
             href="#"
             style={{
@@ -100,12 +91,14 @@ export function LoginPage() {
             Forgot password?
           </a>
         </div>
+
         <PrimaryButton
           onClick={handleSubmit}
           style={{ width: "100%", padding: "14px", fontSize: "15px" }}
         >
           Sign In
         </PrimaryButton>
+
         <p
           style={{
             textAlign: "center",
@@ -115,17 +108,16 @@ export function LoginPage() {
           }}
         >
           Don't have an account?{" "}
-          <a
-            onClick={() => setCurrentPage("register")}
+          <Link
+            to="/register"
             style={{
               color: COLORS.primary,
               fontWeight: 600,
-              cursor: "pointer",
               textDecoration: "none",
             }}
           >
             Create one
-          </a>
+          </Link>
         </p>
       </div>
     </div>

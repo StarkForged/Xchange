@@ -1,10 +1,12 @@
 import { COLORS } from "../../constants/colors";
 import { Icon } from "../common/Icon";
 
-// SideNav renders the dashboard navigation links for admin/seller views.
-export function SideNav({ items, active, onSelect }) {
+// SideNav renders dashboard navigation links.
+// On mobile it slides in as a fixed overlay (controlled by the `open` prop).
+export function SideNav({ items, active, onSelect, open = true, onClose }) {
   return (
     <aside
+      className={`side-nav${open ? " open" : ""}`}
       style={{
         width: "240px",
         background: "#fafbfc",
@@ -15,11 +17,38 @@ export function SideNav({ items, active, onSelect }) {
         minHeight: "calc(100vh - 72px)",
         position: "sticky",
         top: "72px",
+        flexShrink: 0,
       }}
     >
+      {/* Mobile close button */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          style={{
+            display: "none",
+            position: "absolute",
+            top: "16px",
+            right: "16px",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            padding: "4px",
+          }}
+          className="mobile-nav-toggle"
+          aria-label="Close sidebar"
+        >
+          <Icon name="close" size="20px" style={{ color: COLORS.onSurfaceVariant }} />
+        </button>
+      )}
+
       <div style={{ marginBottom: "28px", padding: "0 16px" }}>
         <div
-          style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            marginBottom: "4px",
+          }}
         >
           <Icon name="verified_user" filled style={{ color: COLORS.primary }} />
           <span
@@ -37,10 +66,11 @@ export function SideNav({ items, active, onSelect }) {
           System Status: Active
         </p>
       </div>
+
       {items.map((item) => (
         <a
           key={item.id}
-          onClick={() => onSelect(item.id)}
+          onClick={() => { onSelect(item.id); onClose?.(); }}
           style={{
             display: "flex",
             alignItems: "center",
@@ -53,11 +83,11 @@ export function SideNav({ items, active, onSelect }) {
             color:
               active === item.id ? COLORS.primary : COLORS.onSurfaceVariant,
             background:
-              active === item.id ? COLORS.surfaceContainerLowest : "transparent",
-            boxShadow:
               active === item.id
-                ? "0 2px 8px rgba(0,0,0,0.04)"
-                : "none",
+                ? COLORS.surfaceContainerLowest
+                : "transparent",
+            boxShadow:
+              active === item.id ? "0 2px 8px rgba(0,0,0,0.04)" : "none",
             transition: "all 0.2s",
           }}
         >
@@ -65,6 +95,7 @@ export function SideNav({ items, active, onSelect }) {
           {item.label}
         </a>
       ))}
+
       <div style={{ marginTop: "auto", padding: "0 16px" }}>
         <button
           style={{

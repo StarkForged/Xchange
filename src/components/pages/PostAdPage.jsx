@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { COLORS } from "../../constants/colors";
 import { EmptyState } from "../common/EmptyState";
@@ -6,34 +7,25 @@ import { InputField } from "../form/InputField";
 import { SelectField } from "../form/SelectField";
 import { PrimaryButton } from "../form/PrimaryButton";
 import { Icon } from "../common/Icon";
+import { usePostAdForm } from "../../hooks/usePostAdForm";
 
 // PostAdPage allows authenticated users to create a new marketplace listing.
 export function PostAdPage() {
-  const { user, setCurrentPage } = useAuth();
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    price: "",
-    category: "",
-    subcategory: "",
-    location: "",
-    condition: "new",
-  });
-  const [images, setImages] = useState([]);
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
 
-  const update = (field) => (e) =>
-    setForm({ ...form, [field]: e.target.value });
+  const { form, update, errors, handleBlur, handleSubmit } = usePostAdForm(
+    () => setSubmitted(true)
+  );
 
   if (!user) {
     return (
-      <div style={{ paddingTop: "72px" }}>
-        <EmptyState
-          icon="lock"
-          title="Sign in required"
-          subtitle="You need to be logged in to post a listing"
-        />
-      </div>
+      <EmptyState
+        icon="lock"
+        title="Sign in required"
+        subtitle="You need to be logged in to post a listing"
+      />
     );
   }
 
@@ -41,7 +33,6 @@ export function PostAdPage() {
     return (
       <div
         style={{
-          paddingTop: "72px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -78,15 +69,10 @@ export function PostAdPage() {
           >
             Listing Submitted!
           </h2>
-          <p
-            style={{
-              color: COLORS.onSurfaceVariant,
-              marginBottom: "24px",
-            }}
-          >
+          <p style={{ color: COLORS.onSurfaceVariant, marginBottom: "24px" }}>
             Your ad will be reviewed and published shortly.
           </p>
-          <PrimaryButton onClick={() => setCurrentPage("home")}>
+          <PrimaryButton onClick={() => navigate("/")}>
             Back to Home
           </PrimaryButton>
         </div>
@@ -95,7 +81,7 @@ export function PostAdPage() {
   }
 
   return (
-    <div style={{ paddingTop: "72px" }}>
+    <div>
       <div
         style={{
           maxWidth: "720px",
@@ -122,10 +108,12 @@ export function PostAdPage() {
           }}
         >
           <InputField
-            label="Title"
+            label="Title *"
             value={form.title}
             onChange={update("title")}
+            onBlur={() => handleBlur("title")}
             placeholder="What are you selling?"
+            error={errors.title}
           />
           <InputField
             label="Description"
@@ -134,13 +122,21 @@ export function PostAdPage() {
             onChange={update("description")}
             placeholder="Describe your item in detail..."
           />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "16px",
+            }}
+          >
             <InputField
-              label="Price"
+              label="Price *"
               value={form.price}
               onChange={update("price")}
-              placeholder="$0.00"
+              onBlur={() => handleBlur("price")}
+              placeholder="0.00"
               icon="payments"
+              error={errors.price}
             />
             <InputField
               label="Location"
@@ -150,11 +146,19 @@ export function PostAdPage() {
               icon="location_on"
             />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "16px",
+            }}
+          >
             <SelectField
-              label="Category"
+              label="Category *"
               value={form.category}
               onChange={update("category")}
+              onBlur={() => handleBlur("category")}
+              error={errors.category}
               options={[
                 { value: "", label: "Select category" },
                 { value: "electronics", label: "Electronics" },
@@ -213,10 +217,7 @@ export function PostAdPage() {
               <Icon
                 name="add_a_photo"
                 size="36px"
-                style={{
-                  color: COLORS.outlineVariant,
-                  marginBottom: "12px",
-                }}
+                style={{ color: COLORS.outlineVariant, marginBottom: "12px" }}
               />
               <p
                 style={{
@@ -227,20 +228,14 @@ export function PostAdPage() {
               >
                 Click to upload or drag and drop
               </p>
-              <p
-                style={{
-                  fontSize: "12px",
-                  color: COLORS.outlineVariant,
-                }}
-              >
+              <p style={{ fontSize: "12px", color: COLORS.outlineVariant }}>
                 PNG, JPG up to 10MB. Max 8 images.
               </p>
             </div>
           </div>
 
           <PrimaryButton
-            onClick={() => setSubmitted(true)}
-            disabled={!form.title || !form.price}
+            onClick={handleSubmit}
             style={{ width: "100%", padding: "14px" }}
           >
             Publish Listing

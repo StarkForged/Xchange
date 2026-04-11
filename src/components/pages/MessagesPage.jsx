@@ -10,7 +10,6 @@ export function MessagesPage() {
   return (
     <div
       style={{
-        paddingTop: "72px",
         display: "flex",
         height: "100vh",
         maxWidth: "1440px",
